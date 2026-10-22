@@ -1,0 +1,1 @@
+[PASS] invariant_ownerSetNeverHijacked() (runs: 256, calls: 8192, reverts: 0)

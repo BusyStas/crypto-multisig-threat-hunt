@@ -1,0 +1,17 @@
+# Foundry
+out/
+cache/
+broadcast/
+
+# Rust
+**/target/
+
+# Node (local toolchain only; not part of the repo)
+node_modules/
+
+# Echidna
+detection/echidna-corpus/
+
+# misc
+.DS_Store
+.env

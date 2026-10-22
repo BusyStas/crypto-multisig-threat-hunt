@@ -1,0 +1,10 @@
+[package]
+name = "authz-model"
+version = "0.1.0"
+edition = "2021"
+description = "Toolchain-free model of the Anchor authority-rotation check, so the authorization logic is unit-testable without the Solana BPF toolchain."
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]

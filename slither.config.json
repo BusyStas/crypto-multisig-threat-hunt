@@ -1,0 +1,5 @@
+{
+  "detectors_to_exclude": "naming-convention,solc-version,pragma",
+  "filter_paths": "lib/,test/",
+  "solc_disable_warnings": false
+}

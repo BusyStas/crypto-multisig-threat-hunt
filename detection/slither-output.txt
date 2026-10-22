@@ -1,0 +1,72 @@
+INFO:Detectors:
+Detector: arbitrary-send-eth
+GuardedSafe.execTransaction(address,uint256,bytes,GuardedSafe.Operation,bytes) (src/GuardedSafe.sol#72-97) sends eth to arbitrary user
+	Dangerous calls:
+	- (success,None) = to.call{value: value}(data) (src/GuardedSafe.sol#92)
+MiniSafe.execTransaction(address,uint256,bytes,MiniSafe.Operation,bytes) (src/MiniSafe.sol#81-106) sends eth to arbitrary user
+	Dangerous calls:
+	- (success,None) = to.call{value: value}(data) (src/MiniSafe.sol#98)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#functions-that-send-ether-to-arbitrary-destinations
+INFO:Detectors:
+Detector: controlled-delegatecall
+GuardedSafe.execTransaction(address,uint256,bytes,GuardedSafe.Operation,bytes) (src/GuardedSafe.sol#72-97) uses delegatecall to a input-controlled function id
+	- (success,None) = to.delegatecall(data) (src/GuardedSafe.sol#90)
+MiniSafe.execTransaction(address,uint256,bytes,MiniSafe.Operation,bytes) (src/MiniSafe.sol#81-106) uses delegatecall to a input-controlled function id
+	- (success,None) = to.delegatecall(data) (src/MiniSafe.sol#96)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#controlled-delegatecall
+INFO:Detectors:
+Detector: missing-zero-check
+MiniSafe.execTransaction(address,uint256,bytes,MiniSafe.Operation,bytes).to (src/MiniSafe.sol#82) lacks a zero-check on :
+		- (success,None) = to.delegatecall(data) (src/MiniSafe.sol#96)
+		- (success,None) = to.call{value: value}(data) (src/MiniSafe.sol#98)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+INFO:Detectors:
+Detector: reentrancy-events
+Reentrancy in GuardedSafe.execTransaction(address,uint256,bytes,GuardedSafe.Operation,bytes) (src/GuardedSafe.sol#72-97):
+	External calls:
+	- (success,None) = to.delegatecall(data) (src/GuardedSafe.sol#90)
+	- (success,None) = to.call{value: value}(data) (src/GuardedSafe.sol#92)
+	External calls sending eth:
+	- (success,None) = to.call{value: value}(data) (src/GuardedSafe.sol#92)
+	Event emitted after the call(s):
+	- ExecutionFailure(txHash) (src/GuardedSafe.sol#96)
+	- ExecutionSuccess(txHash) (src/GuardedSafe.sol#95)
+Reentrancy in MiniSafe.execTransaction(address,uint256,bytes,MiniSafe.Operation,bytes) (src/MiniSafe.sol#81-106):
+	External calls:
+	- (success,None) = to.delegatecall(data) (src/MiniSafe.sol#96)
+	- (success,None) = to.call{value: value}(data) (src/MiniSafe.sol#98)
+	External calls sending eth:
+	- (success,None) = to.call{value: value}(data) (src/MiniSafe.sol#98)
+	Event emitted after the call(s):
+	- ExecutionFailure(txHash) (src/MiniSafe.sol#104)
+	- ExecutionSuccess(txHash) (src/MiniSafe.sol#102)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-4
+INFO:Detectors:
+Detector: costly-loop
+StorageWriter.seizeControl(address) (src/StorageWriter.sol#26-36) has costly operations inside a loop:
+	- _owners.pop() (src/StorageWriter.sol#31)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#costly-operations-inside-a-loop
+INFO:Detectors:
+Detector: low-level-calls
+Low level call in GuardedSafe.execTransaction(address,uint256,bytes,GuardedSafe.Operation,bytes) (src/GuardedSafe.sol#72-97):
+	- (success,None) = to.delegatecall(data) (src/GuardedSafe.sol#90)
+	- (success,None) = to.call{value: value}(data) (src/GuardedSafe.sol#92)
+Low level call in MiniSafe.execTransaction(address,uint256,bytes,MiniSafe.Operation,bytes) (src/MiniSafe.sol#81-106):
+	- (success,None) = to.delegatecall(data) (src/MiniSafe.sol#96)
+	- (success,None) = to.call{value: value}(data) (src/MiniSafe.sol#98)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
+INFO:Detectors:
+Detector: naming-convention
+Parameter GuardedSafe.getTransactionHash(address,uint256,bytes,GuardedSafe.Operation,uint256)._nonce (src/GuardedSafe.sol#63) is not in mixedCase
+Parameter MiniSafe.getTransactionHash(address,uint256,bytes,MiniSafe.Operation,uint256)._nonce (src/MiniSafe.sol#62) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+INFO:Detectors:
+Detector: constable-states
+StorageWriter.nonce (src/StorageWriter.sol#21) should be constant 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variables-that-could-be-declared-constant
+INFO:Detectors:
+Detector: immutable-states
+GuardedSafe.threshold (src/GuardedSafe.sol#23) should be immutable 
+MiniSafe.threshold (src/MiniSafe.sol#29) should be immutable 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variables-that-could-be-declared-immutable
+INFO:Slither:. analyzed (3 contracts with 102 detectors), 15 result(s) found

@@ -1,0 +1,10 @@
+# Echidna config for the GuardedSafe property run.
+# Usage: echidna test/echidna/EchidnaGuard.sol --contract EchidnaGuard --config echidna.yaml
+testMode: property
+testLimit: 50000
+seqLen: 50
+shrinkLimit: 5000
+# Point crytic-compile at the same solc the rest of the repo uses.
+cryticArgs: ["--solc", "solc"]
+corpusDir: "detection/echidna-corpus"
+coverage: true

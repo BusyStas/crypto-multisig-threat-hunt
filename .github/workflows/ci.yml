@@ -1,0 +1,70 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  foundry:
+    name: Foundry tests + invariants
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+      - name: forge build
+        run: forge build
+      - name: forge test (unit + invariant)
+        run: forge test -vvv
+
+  halmos:
+    name: Halmos symbolic proofs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install halmos
+      - name: halmos
+        run: halmos --function check_ --match-contract GuardSymbolicTest
+
+  slither:
+    name: Slither static analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+      - uses: crytic/slither-action@v0.4.0
+        with:
+          fail-on: none
+
+  echidna:
+    name: Echidna property fuzzing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+      - name: Echidna
+        uses: crytic/echidna-action@v2
+        with:
+          files: test/echidna/EchidnaGuard.sol
+          contract: EchidnaGuard
+          config: echidna.yaml
+
+  solana-model:
+    name: Rust authz model
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: cargo test
+        run: cargo test --manifest-path solana/authz-model/Cargo.toml
